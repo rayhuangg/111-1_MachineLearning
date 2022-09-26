@@ -1,18 +1,19 @@
 clc; clear;
 
+% 讀取資料
 X = load('02HW1_Xtrain');
 Y = load('02HW1_Ytrain');
-f = figure;  
-f.Position = [10 50 550 400]; 
+
 
 for n=1:3
     subplot(1, 3, n)
     plot(X, Y, "o");
     hold on;
     
-    p = polyfit(X ,Y, n);
-    x1 = linspace(0, 1, 20);
-    y1 = polyval(p, x1);
+    [p, S] = polyfit(X ,Y, n); % 線性擬合
+    x1 = linspace(0, 1, 20); % 建立新X軸以便做圖
+    y1 = polyval(p, x1); % 計算預測值
+    T = table(X,Y,y1',Y-y1','VariableNames',{'X','Y','Fit','FitError'});
     
     plot(x1, y1);
     legend('data','fit')
@@ -20,5 +21,3 @@ for n=1:3
     hold off;
 
 end
-
-% plot(X,Y,'o',X,y1,'-')

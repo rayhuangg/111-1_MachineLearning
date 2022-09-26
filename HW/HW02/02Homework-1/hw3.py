@@ -5,6 +5,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import r2_score
+import statsmodels.api as sm
+import scipy.stats as stats
 
 #%%
 # read data
@@ -40,7 +42,7 @@ for order in range(1, 7):
     plt.plot(data_x_1990, fit_y, 'r', label='polyfit values')
     plt.xlabel('maturity')
     plt.ylabel('y axis')
-    plt.legend(loc=4) # 指定legend在图中的位置，类似象限的位置
+    plt.legend(loc=4) # 指定圖例象限的位置
     plt.title(f'order: {order}')
     plt.subplots_adjust(wspace=0.2, hspace=0.4)
     r2_list.append(r2_score(y_true=data_y_1990, y_pred=fit_model(data_x_1990))) # 計算r2數值
@@ -78,3 +80,14 @@ plt.show()
 
 # %%
 #================= part d =================
+
+## histogram
+plt.hist(residuals, bins='auto')
+plt.title("Histogram of the residuals")
+plt.show()
+
+## QQ plot
+residuals = np.array(residuals)
+fig = sm.qqplot(residuals, stats.t, fit=True, line="45")
+plt.title("quantile-quantile plot of the residuals")
+plt.show()
