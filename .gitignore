@@ -163,3 +163,4 @@ cython_debug/
 # my setting
 ~$*.docx
 *.tmp
+barry/
