@@ -160,7 +160,7 @@ cython_debug/
 #.idea/
 
 
-# my setting
+## my setting
 ~$*.docx
 *.tmp
 barry/
