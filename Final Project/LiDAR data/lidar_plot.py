@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from hokuyolx import HokuyoLX
+# from hokuyolx import HokuyoLX
 import ast, glob
 
 class Lidar():
@@ -103,7 +103,7 @@ class Lidar():
         self.axes.set_ylabel("y (cm)")
 
 
-    def plot_lidar(self, x_lidar, ylidar, save:False, filename=None):
+    def plot_lidar(self, x_lidar, ylidar, save=False, filename=None):
         plt.figure()
         plt.xlim(-2000, 2000), plt.ylim(-2000, 2000)
         plt.plot(x_lidar, ylidar, "ok", markersize=0.5)
@@ -115,13 +115,15 @@ class Lidar():
         plt.show()
 
     def plot_and_save_all_plt(self):
+        # TODO 換成使用pathlib解決跨系統問題
         pic_path_list = glob.glob("./ml_dataset/*.txt")
-        # print(len(pic_path_list)) # 63
+        print(len(pic_path_list)) # 62
 
         for path in pic_path_list:
             self.conver_to_2txt(path=path)
             lidar_pos_x, lidar_pos_y = self.open_2_txt()
-            self.plot_lidar(lidar_pos_x, lidar_pos_y, save=True, filename=path.split("\\")[-1])
+            self.plot_lidar(lidar_pos_x, lidar_pos_y, save=True, filename=path.split("/")[-1])
+            # print("saved")
 
 
     # DBSCAN
