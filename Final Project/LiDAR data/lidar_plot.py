@@ -1,7 +1,7 @@
+import ast, glob
 import matplotlib.pyplot as plt
 import numpy as np
-# from hokuyolx import HokuyoLX
-import ast, glob
+from pathlib import Path
 
 class Lidar():
 
@@ -34,7 +34,7 @@ class Lidar():
             data = f.readlines()[0]
             data = ast.literal_eval(data) # str to list
             data = np.array(data)
-            # print(type(data))
+
             return data
 
 
@@ -47,11 +47,11 @@ class Lidar():
         # x_lidar = scan * np.cos(np.radians(angles))
         # y_lidar = scan * np.sin(np.radians(angles))
 
-        # TODO 確認正確與否
+
         # create angle data list
         # (based on hokuyo.py, fun: get_angles)
-        space = np.linspace(0, 1080, 1081) - 540 # 540: Step number of the front direction
-        angle_manual = 2*np.pi*space/1440  # 1440: Angular resolution (number of partitions in 360 degrees)
+        space = np.linspace(0, 1080, 1081) - 540        # 540: Step number of the front direction
+        angle_manual = 2*np.pi*space/1440 + np.pi/2     # 1440: Angular resolution (number of partitions in 360 degrees), np.pi/2: 對齊車道方向
         x_lidar = scan * np.cos(angle_manual)
         y_lidar = scan * np.sin(angle_manual)
 
@@ -65,8 +65,6 @@ class Lidar():
         np.set_printoptions(threshold=10000)
         with open('lidar_pos_x.txt', 'w') as txtfile:
             for data in xdata:
-                # txtfile.writelines(str(int(data))+', ')
-                # print(data)
                 txtfile.writelines(str(int(data))+', ')
 
         with open('lidar_pos_y.txt', 'w') as txtfile:
@@ -76,14 +74,10 @@ class Lidar():
 
     def open_2_txt(self):
         with open("lidar_pos_x.txt", "r") as f:
-            # lidar_pos_x = f.readlines()
-            # print((lidar_pos_x.split(', ')))
             lidar_pos_x = f.read().split(', ')
             lidar_pos_x = [int(num) for num in lidar_pos_x if num != '']
 
         with open("lidar_pos_y.txt", "r") as f:
-            # lidar_pos_y = f.readlines()
-            # print((lidar_pos_y.split(', ')))
             lidar_pos_y = f.read().split(', ')
             lidar_pos_y = [int(num) for num in lidar_pos_y if num != '']
 
@@ -92,20 +86,10 @@ class Lidar():
         return lidar_pos_x, lidar_pos_y
 
 
-    def compute_initial_figure(self):
-        x_lidar = 0
-        y_lidar = 0
-        self.axes.set_xlim(left=-5000, right=5000)
-        self.axes.set_ylim(bottom=-5000, top=5000)
-        self.axes.plot(x_lidar, y_lidar, 'b')
-        self.axes.set_title("LiDAR scanning")
-        self.axes.set_xlabel("x (cm)")
-        self.axes.set_ylabel("y (cm)")
-
-
     def plot_lidar(self, x_lidar, ylidar, save=False, filename=None):
-        plt.figure()
+        plt.cla() # 避免記憶體占用
         plt.xlim(-2000, 2000), plt.ylim(-2000, 2000)
+        plt.xlabel("x (cm)"), plt.ylabel("y (cm)")
         plt.plot(x_lidar, ylidar, "ok", markersize=0.5)
 
         if save == True:
@@ -114,16 +98,22 @@ class Lidar():
             return
         plt.show()
 
-    def plot_and_save_all_plt(self):
-        # TODO 換成使用pathlib解決跨系統問題
-        pic_path_list = glob.glob("./ml_dataset/*.txt")
-        print(len(pic_path_list)) # 62
 
-        for path in pic_path_list:
+    def plot_and_save_all_plt(self):
+        # TODO 確認跨系統問題
+        # all_pic_path = glob.glob("./ml_dataset/*.txt")
+        all_pic_path = (Path("ml_dataset").glob("*.txt"))
+
+        if not Path("output").exists():
+            Path("output").mkdir()
+
+        number_of_path = 0
+        for path in all_pic_path:
             self.conver_to_2txt(path=path)
             lidar_pos_x, lidar_pos_y = self.open_2_txt()
-            self.plot_lidar(lidar_pos_x, lidar_pos_y, save=True, filename=path.split("/")[-1])
-            # print("saved")
+            self.plot_lidar(lidar_pos_x, lidar_pos_y, save=True, filename=path.name)
+            number_of_path += 1
+        print(f"saved {number_of_path} files.")
 
 
     # DBSCAN
@@ -226,7 +216,7 @@ def main():
     lidar = Lidar()
 
     #=========== 1 picture ===========
-    # path = 'ml_dataset/151.txt'
+    # path = Path("ml_dataset/115.txt")
     # lidar.conver_to_2txt(path)
     # lidar_pos_x, lidar_pos_y = lidar.open_2_txt()
     # lidar.plot_lidar(lidar_pos_x, lidar_pos_y)
