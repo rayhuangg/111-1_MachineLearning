@@ -111,7 +111,7 @@ class Lidar():
         for path in all_pic_path:
             self.conver_to_2txt(path=path)
             lidar_pos_x, lidar_pos_y = self.open_2_txt()
-            self.plot_lidar(lidar_pos_x, lidar_pos_y, save=True, filename=path.name)
+            self.plot_lidar(lidar_pos_x, lidar_pos_y, save=True, filename=path.stem)
             number_of_path += 1
         print(f"saved {number_of_path} files.")
 
@@ -210,7 +210,7 @@ class Lidar():
         # print(lidar_angle)
         return x_c, y_c, lidar_angle, colors, x_l, y_l, x_r, y_r, mid_dis
 
-
+  
 
 def main():
     lidar = Lidar()
