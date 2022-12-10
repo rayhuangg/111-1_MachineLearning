@@ -100,7 +100,6 @@ class Lidar():
 
 
     def plot_and_save_all_plt(self):
-        # TODO 確認跨系統問題
         # all_pic_path = glob.glob("./ml_dataset/*.txt")
         all_pic_path = (Path("ml_dataset").glob("*.txt"))
 
