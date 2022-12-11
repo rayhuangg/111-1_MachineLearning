@@ -162,6 +162,7 @@ cython_debug/
 
 ## my setting
 ~$*.docx
+~$*.xlsx
 *.pptx
 *.tmp
 *.zip
@@ -172,5 +173,7 @@ Final Project/LiDAR data/direction/
 *.mp4
 lidar_pos_x.txt
 lidar_pos_y.txt
+Final Project/LiDAR data/lidar_ground_truth/
 Final Project/LiDAR data/output_dbscan/
+Final Project/LiDAR data/output_hdbscan/
 Final Project/LiDAR data/output_visualize/
